@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TỔNG QUAN FILE: Quy tắc sao lưu tự động cho Android 11 trở xuống.
+
+    Thành phần chính:
+    - Loại trừ token đăng nhập (DataStore "session"), database cache và thư mục outbox.
+    - Cài đặt app (DataStore "settings") vẫn được sao lưu.
+
+    Lưu ý:
+    - Giữ đồng bộ với data_extraction_rules.xml (Android 12+). Đổi tên file DataStore/database thì sửa cả hai.
+-->
+<full-backup-content>
+        <!-- The login token: a restored phone must sign in again -->
+        <exclude domain="file" path="datastore/session.preferences_pb" />
+        <!-- Cache of the account (refilled from the backend) and unsent photos -->
+        <exclude domain="database" path="loki-cache.db" />
+        <exclude domain="file" path="outbox" />
+</full-backup-content>

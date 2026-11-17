@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TỔNG QUAN FILE: Theme XML dùng trước khi Compose kịp vẽ (lúc mở app).
+
+    Thành phần chính:
+    - Theme.Loki: nền đen, thanh trạng thái và thanh điều hướng trong suốt.
+
+    Lưu ý:
+    - Theme thật của giao diện nằm trong ui/theme/Theme.kt; file này chỉ chống nháy trắng lúc khởi động.
+-->
+<resources>
+    <!-- Dark from the first frame, so there is no white flash before Compose draws -->
+    <style name="Theme.Loki" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>

@@ -1,0 +1,14 @@
+<!--
+    TỔNG QUAN FILE: Chuỗi dạng resource: tên app và mô tả widget.
+
+    Thành phần chính:
+    - app_name: tên hiện dưới icon. widget_description: mô tả trong danh sách widget.
+
+    Lưu ý:
+    - Phần lớn chữ trong giao diện đang viết thẳng trong code Kotlin; muốn hỗ trợ nhiều ngôn ngữ thì phải chuyển
+      vào đây.
+-->
+<resources>
+    <string name="app_name">Loki</string>
+    <string name="widget_description">Ảnh mới nhất từ bạn bè</string>
+</resources>

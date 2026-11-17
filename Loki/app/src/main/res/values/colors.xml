@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TỔNG QUAN FILE: Màu dạng resource XML (mẫu của Android Studio).
+
+    Lưu ý:
+    - Code Kotlin không dùng các màu này; màu giao diện nằm trong ui/theme/Color.kt. Có thể xoá các màu purple
+      và teal.
+-->
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <!-- Accent of notifications (the app's yellow) -->
+    <color name="loki_yellow">#FFFFC83D</color>
+</resources>

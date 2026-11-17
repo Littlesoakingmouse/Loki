@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TỔNG QUAN FILE: Manifest chính: khai báo quyền và các thành phần Android của app.
+
+    Thành phần chính:
+    - Quyền: INTERNET, POST_NOTIFICATIONS, CAMERA, ACCESS_LOCAL_NETWORK (Android 17+, để gọi backend ở địa chỉ
+      riêng).
+    - application: lớp LokiApp, icon, theme tối, quy tắc sao lưu.
+    - MainActivity: singleTop; mở từ launcher và từ link mời loki://add/<id>.
+    - LokiWidgetReceiver: widget màn hình chính. LokiMessagingService: nhận push của Firebase.
+    - InitializationProvider: gỡ bộ khởi tạo WorkManager mặc định để LokiApp tự cấu hình với Hilt.
+
+    Lưu ý:
+    - Không bật usesCleartextTraffic ở đây: bản release chỉ gọi HTTPS. Bản debug cho phép HTTP tới máy dev qua
+      src/debug (network_security_config).
+    - Sao lưu: backup_rules và data_extraction_rules loại token đăng nhập, cache và hàng đợi gửi khỏi bản sao lưu,
+      để khôi phục sang máy mới không mang theo phiên đăng nhập cũ.
+    - FileProvider (cache/shared) dùng để chia sẻ ảnh sang app khác.
+    - launchMode singleTop khiến bấm thông báo khi app đang mở sẽ gọi onNewIntent thay vì tạo Activity mới.
+    - Không xoá phần gỡ WorkManagerInitializer, nếu không OutboxWorker sẽ không được inject.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Saving a photo to the gallery: only Android 8-9 need this, newer versions write through MediaStore -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-feature android:name="android.hardware.camera.any" android:required="false" />
+    <!-- Android 17+: needed to reach the dev backend on a private address (10.0.2.2 / LAN IP) -->
+    <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
+
+    <application
+        android:name=".LokiApp"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Loki">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Loki"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- Invite links: loki://add/{userId} -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="loki" android:host="add" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".widget.LokiWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/loki_widget_info" />
+        </receiver>
+
+        <!-- WorkManager is started by LokiApp (Configuration.Provider) so it can use Hilt's worker factory -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+
+        <!-- Shares a downloaded photo with other apps without exposing app files -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <service
+            android:name=".push.LokiMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

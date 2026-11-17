@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TỔNG QUAN FILE: Thông tin widget cho launcher: kích thước, chế độ đổi kích thước, chu kỳ cập nhật.
+
+    Thành phần chính:
+    - Kích thước tối thiểu 110dp, mặc định 2x2 ô, đổi kích thước được theo cả hai chiều.
+    - updatePeriodMillis 30 phút: chu kỳ tự cập nhật ngắn nhất Android cho phép.
+    - initialLayout: layout chờ do thư viện Glance cung cấp.
+
+    Lưu ý:
+    - Cập nhật tức thì do code gọi updateAll, chu kỳ ở đây chỉ là dự phòng.
+-->
+<!-- 30 min is the shortest automatic refresh Android allows -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/widget_description"
+    android:initialLayout="@layout/glance_default_loading_layout"
+    android:minWidth="110dp"
+    android:minHeight="110dp"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellWidth="2"
+    android:targetCellHeight="2"
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="home_screen" />

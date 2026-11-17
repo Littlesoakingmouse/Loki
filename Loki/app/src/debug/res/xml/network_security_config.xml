@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TỔNG QUAN FILE: Cấu hình bảo mật mạng của bản debug.
+
+    Thành phần chính:
+    - Bản debug cho phép HTTP không mã hoá tới mọi địa chỉ: 10.0.2.2 (máy tính chạy emulator) hoặc IP LAN của
+      máy dev khi chạy trên điện thoại thật.
+
+    Lưu ý:
+    - File này chỉ nằm trong src/debug. Bản release không có nó nên chỉ gọi được HTTPS.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>

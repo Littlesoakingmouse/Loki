@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TỔNG QUAN FILE: Thư mục mà FileProvider được phép cấp quyền đọc cho app khác.
+
+    Lưu ý:
+    - Chỉ cache/shared: ảnh tải về để chia sẻ. Không mở thêm thư mục chứa dữ liệu tài khoản.
+-->
+<paths>
+    <cache-path name="shared" path="shared/" />
+</paths>
